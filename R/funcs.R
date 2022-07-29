@@ -1,9 +1,5 @@
 
-
-
-
 runshinySQLite<-function(){
-
 library(shiny)
 library(RSQLite)
 library(tidyverse)
@@ -13,11 +9,6 @@ library(bslib)
 library(shinyWidgets)
 library(dashboardthemes)
 library(bs4Dash)
-
-
-
-
-
 
 
 mydb<-data.frame(dbname='',created.on='')
@@ -37,7 +28,7 @@ dbDisconnect(con)
 
 
 ui <-fluidPage(theme = bs_theme(version = '4',
-                                bootswatch = 'lit'),
+                                bootswatch = 'mat'),
                theme_blue_gradient,
                useShinyjs(),
                titlePanel('shinySQLitedb'),
@@ -66,7 +57,9 @@ ui <-fluidPage(theme = bs_theme(version = '4',
 
                           tabsetPanel(
                             ########################################--- edit db append rows ui items----
-                            tabPanel('Add Row',
+                            tabPanel('Edit Rows',
+                                     tabsetPanel(
+                                     tabPanel('Add Rows',
                                      sidebarLayout(
                                        sidebarPanel(
                                          uiOutput('selected'),
@@ -80,6 +73,18 @@ ui <-fluidPage(theme = bs_theme(version = '4',
                                          tableOutput('appendeddb')
                                        ))
                             ),
+
+                            tabPanel('Delete rows',
+                                     sidebarLayout(
+                                       sidebarPanel(
+                                         uiOutput('checktodel')
+                                       ),
+                                       mainPanel(
+                                         tableOutput('rowreduceddt')
+                                       )
+                                     )
+                            )
+                            )),
                             ########################################---.
 
                             ########################################--- edit db cells ui items----
@@ -101,26 +106,27 @@ ui <-fluidPage(theme = bs_theme(version = '4',
                             ########################################---.
 
                             ########################################--- db add colums ui items----
-                            tabPanel('Add Columns',
-                                     sidebarLayout(
-                                       sidebarPanel(
-                                         uiOutput('addcolsui')
+                            tabPanel('Edit Columns',
+                                     tabsetPanel(
+                                       tabPanel('Add Columns',
+                                                sidebarLayout(
+                                                  sidebarPanel(
+                                                    uiOutput('addcolsui')
+                                                  ),
+                                                  mainPanel(
+                                                    tableOutput('dbaddedcolstable')
+                                                  ))
                                        ),
-                                       mainPanel(
-                                         tableOutput('dbaddedcolstable')
+                                       tabPanel('Change Column Name',
+                                                sidebarLayout(
+                                                  sidebarPanel(
+                                                    uiOutput('selectclm')
+                                                  ),
+                                                  mainPanel(
+                                                    tableOutput('changedcoltable')
+                                                  ))
                                        )
-                                     )
-                            ),
-                            tabPanel('Delete rows',
-                                     sidebarLayout(
-                                       sidebarPanel(
-                                         uiOutput('checktodel')
-                                       ),
-                                       mainPanel(
-                                         tableOutput('rowreduceddt')
-                                       )
-                                     )
-                            )
+                                     ))
                           ))
                  ########################################---.
 
@@ -432,6 +438,49 @@ server <- function(input, output, session) {
       dbaddedcol()}
   })
 
+  ########################################---.
+
+
+
+  ########################################--- change column names----
+
+  output$selectclm<-renderUI({
+    con <- dbConnect(SQLite(), "myrsqltdbfile")
+    cols<-dbReadTable(con, input$opened)
+    choics<-names(cols)
+    fluidPage(
+      selectInput("selectedcol","select the column you want to change it's name",choices=choics),
+      textInput('newname',placeholder='type the new name here',''),
+      checkboxInput('makechanges','commit changes',value=F)
+
+    )
+
+  })
+
+
+
+  changecolname <- reactive({
+    con <- dbConnect(SQLite(), "myrsqltdbfile")
+    if(input$makechanges==T){
+
+      dbBegin(con)
+      dbSendStatement(con, paste("
+                           ALTER TABLE", input$opened,
+                           "RENAME COLUMN", input$selectedcol,"TO", paste0(input$newname,";")))
+
+      dbCommit(con)}
+
+    data <- dbReadTable(con, input$opened)
+    #dbDisconnect(comy)
+    return(data)
+  })
+
+
+  output$changedcoltable<-renderTable({
+    if(input$opened!=''){
+      changecolname()}
+  })
+
 
   ########################################---.
 
@@ -501,4 +550,5 @@ server <- function(input, output, session) {
 
 # Run the application
 shinyApp(ui = ui, server = server)}
+
 
