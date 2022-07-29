@@ -3,7 +3,7 @@ Type: Package
 Title: Build SQLite databases in shiny app.
 Version: 0.1.0
 Author: Abednego Nasila
-Maintainer: <alisanabednego@gmail.com >
+Maintainer: Abednego Nasila <alisanabednego@gmail.com >
 Description: shinySQLite enables you to create, edit, use and share SQLite databases directly from shiny app.
 License: MIT licence
 Encoding: UTF-8
