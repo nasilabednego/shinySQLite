@@ -1,6 +1,6 @@
 \name{runshinySQLite}
 \alias{runshinySQLite}
-\title{Hello, World!}
+\title{Run and use shiny SQLite demo app}
 \usage{
 runshinySQLite()
 }
