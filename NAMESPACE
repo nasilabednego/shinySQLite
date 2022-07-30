@@ -1,5 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 import(RSQLite)
+import(readxl)
 import(tidyverse)
 import(bs4Dash)
 import(dashboardthemes)
