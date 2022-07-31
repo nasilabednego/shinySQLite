@@ -715,10 +715,9 @@ runshinySQLite<-function(dbname=''){
   
 }
 
-
-shinySQLiteUI<-function () 
+shinySQLiteUI<-function ()
 {
-  
+
     library(shiny)
     library(RSQLite)
     library(tidyverse)
@@ -729,39 +728,51 @@ shinySQLiteUI<-function ()
     library(shinyWidgets)
     library(dashboardthemes)
     library(bs4Dash)
-   
-    fluidPage(theme = bs_theme(version = "4", 
-                                                                                          bootswatch = "sim"), theme_blue_gradient, useShinyjs(), 
-                                                                         tabsetPanel(tabPanel("Open/Create.New_db/download_data", 
-                                                                                              tabsetPanel(tabPanel("Open/Create.New_db/", 
-                                                                                                                   sidebarLayout(sidebarPanel(uiOutput("opendb"), 
-                                                                                                                                              hr(), "OR CREATE A NEW DB ", uiOutput("creatdbui")), 
-                                                                                                                                 mainPanel(uiOutput("checkdb"), tableOutput("dt"), 
-                                                                                                                                           tableOutput("dt2"), hr(), tags$b("These are your available databases. You can open any of them in the select input and edit them in the"), 
-                                                                                                                                           span(tags$b("Edit db"), style = "color:blue"), 
-                                                                                                                                           tags$b("tab"), dataTableOutput("myavailabledbs"), 
-                                                                                                                                           hr(), "Reads uploaded data", tableOutput("rid")))), 
-                                                                                                          tabPanel("download.data_from db/", sidebarLayout(sidebarPanel(uiOutput("downlodui")), 
-                                                                                                                                                           mainPanel(tableOutput("dbtable")))))), 
-                                                                                     tabPanel("Edit db", tabsetPanel(tabPanel("Edit Rows", 
-                                                                                                                              tabsetPanel(tabPanel("Add Rows", sidebarLayout(sidebarPanel(uiOutput("selected"), 
-                                                                                                                                                                                          uiOutput("valuestoappend")), mainPanel("This is the row you are likely to append to the db", 
-                                                                                                                                                                                                                                 tableOutput("reactdf"), hr(), "Your append values will display here when you check in the sidebar", 
-                                                                                                                                                                                                                                 tableOutput("appendeddb")))), tabPanel("Delete rows", 
-                                                                                                                                                                                                                                                                        sidebarLayout(sidebarPanel(uiOutput("checktodel")), 
-                                                                                                                                                                                                                                                                                      mainPanel(tableOutput("rowreduceddt")))))), 
-                                                                                                                     tabPanel("Edit Cells", sidebarLayout(sidebarPanel(uiOutput("editincol"), 
-                                                                                                                                                                       uiOutput("conditcol"), uiOutput("conditvalue"), 
-                                                                                                                     ), mainPanel(tableOutput("editedcells")))), 
-                                                                                                                     tabPanel("Edit Columns", tabsetPanel(tabPanel("Add Columns", 
-                                                                                                                                                                   sidebarLayout(sidebarPanel(uiOutput("addcolsui")), 
-                                                                                                                                                                                 mainPanel(tableOutput("dbaddedcolstable")))), 
-                                                                                                                                                          tabPanel("Change Column Name", sidebarLayout(sidebarPanel(uiOutput("selectclm")), 
-                                                                                                                                                                                                       mainPanel(tableOutput("changedcoltable"))))))))))}
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-   shinySQLiteserver <- function(dbname='',input, output, session) {
-      
+
+    fluidPage(theme = bs_theme(version = "4",
+                                                                                          bootswatch = "sim"), theme_blue_gradient, useShinyjs(),
+                                                                         tabsetPanel(tabPanel("Open/add.new/download_data",
+                                                                                              tabsetPanel(tabPanel("Open/add.new.data/",
+                                                                                                                   sidebarLayout(sidebarPanel(uiOutput("opendb"),
+                                                                                                                                              hr(), "CREATE A NEW DATA FRAME OR UPLOAD .CSV/.XLSX ", uiOutput("creatdbui")),
+                                                                                                                                 mainPanel(uiOutput("checkdb"), tableOutput("dt"),
+                                                                                                                                           tableOutput("dt2"), hr(), tags$b("These are your available databases. You can open any of them in the select input and edit them in the"),
+                                                                                                                                           span(tags$b("Edit db"), style = "color:blue"),
+                                                                                                                                           tags$b("tab"), dataTableOutput("myavailabledbs"),
+                                                                                                                                           hr(), "Reads uploaded data", tableOutput("rid")))),
+                                                                                                          tabPanel("download.data_from db/", sidebarLayout(sidebarPanel(uiOutput("downlodui")),
+                                                                                                                                                           mainPanel(tableOutput("dbtable")))))),
+                                                                                     tabPanel("Edit.dataframe", tabsetPanel(tabPanel("Edit Rows",
+                                                                                                                              tabsetPanel(tabPanel("Edit Rows", sidebarLayout(sidebarPanel(uiOutput("selected"),
+                                                                                                                                                                                          uiOutput("valuestoappend")), mainPanel("This is the row you are likely to append to the db",
+                                                                                                                                                                                                                                 tableOutput("reactdf"), hr(), "Your append values will display here when you check in the sidebar",
+                                                                                                                                                                                                                                 tableOutput("appendeddb")))), tabPanel("Delete rows",
+                                                                                                                                                                                                                                                                        sidebarLayout(sidebarPanel(uiOutput("checktodel")),
+                                                                                                                                                                                                                                                                                      mainPanel(tableOutput("rowreduceddt")))))),
+                                                                                                                     tabPanel("Edit Cells", sidebarLayout(sidebarPanel(uiOutput("editincol"),
+                                                                                                                                                                       uiOutput("conditcol"), uiOutput("conditvalue"),
+                                                                                                                     ), mainPanel(tableOutput("editedcells")))),
+                                                                                                                     tabPanel("Edit Columns", tabsetPanel(tabPanel("Add Columns",
+                                                                                                                                                                   sidebarLayout(sidebarPanel(uiOutput("addcolsui")),
+                                                                                                                                                                                 mainPanel(tableOutput("dbaddedcolstable")))),
+                                                                                                                                                          tabPanel("Change.Column_Name", sidebarLayout(
+                                                                                                                                                            sidebarPanel(
+                                                                                                                                                              uiOutput("selectclm")),
+                                                                                                                                                                                                       mainPanel(
+                                                                                                                                                                                                         tableOutput("changedcoltable")))),
+                                                                                                                                                          tabPanel("Remove column",
+                                                                                                                                                                   sidebarLayout(
+                                                                                                                                                            sidebarPanel(
+                                                                                                                                                              uiOutput("columremoveui")),
+                                                                                                                                                                                                       mainPanel(tableOutput("rcoltbl"))))
+                                                                                                                                                          )
+                                                                                                                     )))
+                                                                                     ))}
+
+
+
+  shinySQLiteserver <- function(dbname='',input, output, session) {
+
       mydb <- data.frame(dbname = "", created.on = "")
       con <- dbConnect(SQLite(), dbname)
       dbWriteTable(con, "awesome", mydb, append = TRUE)
@@ -770,16 +781,16 @@ shinySQLiteUI<-function ()
       dbGetRowsAffected(rs)
       dbClearResult(rs)
       dbCommit(con)
-      dbDisconnect(con)
-      
+
+
       output$uplodui <- renderUI({
         if (input$creatoruplod == "uploadData") {
-          fluidPage(radioButtons("fileType_Input", label = h4("Choose File type"), 
-                                 choices = list(`.csv/txt` = 1, .xlsx = 2), 
-                                 selected = 1, inline = TRUE), fileInput("file1", 
-                                                                         h4("Upload csv/xlsx"), accept = c("text/csv", 
-                                                                                                           "text/comma-separated-values,text/plain", 
-                                                                                                           ".csv", ".xlsx")), hr(), textInput("saveas", 
+          fluidPage(radioButtons("fileType_Input", label = h4("Choose File type"),
+                                 choices = list(`.csv/txt` = 1, .xlsx = 2),
+                                 selected = 1, inline = TRUE), fileInput("file1",
+                                                                         h4("Upload csv/xlsx"), accept = c("text/csv",
+                                                                                                           "text/comma-separated-values,text/plain",
+                                                                                                           ".csv", ".xlsx")), hr(), textInput("saveas",
                                                                                                                                               "save your file as in the db", placeholder = "type the file name here"))
         }
       })
@@ -822,7 +833,7 @@ shinySQLiteUI<-function ()
         if (input$createnew == T) {
           if (input$creatoruplod == "uploadData") {
             myd <- uploadeddata()
-            dbWriteTable(con, input$saveas, myd, append = F, 
+            dbWriteTable(con, input$saveas, myd, append = F,
                          overwrite = T)
           }
         }
@@ -845,21 +856,21 @@ shinySQLiteUI<-function ()
       })
       output$checkdb <- renderUI({
         if (input$createnew == T) {
-          HTML(paste("You have just created", span(style = "color:fucshsia", 
-                                                   input$addnewdb), "db. To open it, type its name in the select input above"))
+          HTML(paste("You have just added", span(style = "color:fucshsia",
+                                                   input$addnewdb), "data frame in",dbname, "db. To open it, type its name in the select input above"))
         }
       })
       output$opendb <- renderUI({
         read <- awesomedt()
         choices <- read$dbname
-        fluidPage(selectInput("opened", uiOutput("opnddb"), 
+        fluidPage(selectInput("opened", uiOutput("opnddb"),
                               choices = choices))
       })
       output$opnddb <- renderUI({
         if (input$opened != "") {
-          HTML(paste(span(style = "color:green", "You have opened "), 
-                     span(style = "color:blue", input$opened), 
-                     "db.", span(style = "color:green", "You can open your other dbs here or CREATE MORE DBs more below")))
+          HTML(paste(span(style = "color:green", "You have opened "),
+                     span(style = "color:blue", input$opened),
+                     "dataframe from your",span(style = "color:orange", dbname), "db. Go to Edit tab while keeping this input active. You can open other data frames here at any time.", span(style = "color:green", "You can open your other data here or ADD MORE DATA FRAMES below")))
         }
         else span(style = "color:orange", "Select to open your database here")
       })
@@ -874,7 +885,7 @@ shinySQLiteUI<-function ()
       output$editdbname <- renderUI({
         if (input$creatoruplod == "createnewdata") {
           if (input$createnew == F) {
-            textInput("addnewdb", placeholder = "type a new db name here", 
+            textInput("addnewdb", placeholder = "type a new db name here",
                       "")
           }
           else {
@@ -882,17 +893,17 @@ shinySQLiteUI<-function ()
         }
       })
       output$creatdbui <- renderUI({
-        fluidPage(radioGroupButtons("creatoruplod", "create new data or upload data", 
-                                    choices = c("createnewdata", "uploadData")), 
-                  uiOutput("editdbname"), uiOutput("uplodui"), 
-                  checkboxInput("createnew", uiOutput("checkcontrol"), 
+        fluidPage(radioGroupButtons("creatoruplod", "create new data or upload data",
+                                    choices = c("createnewdata", "uploadData")),
+                  uiOutput("editdbname"), uiOutput("uplodui"),
+                  checkboxInput("createnew", uiOutput("checkcontrol"),
                                 value = F))
       })
       awesomedt <- reactive({
         con <- dbConnect(con, dbname)
         if (input$createnew == T) {
           if (input$creatoruplod == "createnewdata") {
-            dbWriteTable(con, "awesome", data.frame(dbname = input$addnewdb, 
+            dbWriteTable(con, "awesome", data.frame(dbname = input$addnewdb,
                                                     created.on = paste(Sys.time())), append = TRUE)
             dbBegin(con)
             rs <- dbSendStatement(con, paste("DELETE from awesome WHERE dbname = '' "))
@@ -901,7 +912,7 @@ shinySQLiteUI<-function ()
             dbCommit(con)
           }
           else if (input$creatoruplod == "uploadData") {
-            dbWriteTable(con, "awesome", data.frame(dbname = input$saveas, 
+            dbWriteTable(con, "awesome", data.frame(dbname = input$saveas,
                                                     created.on = paste(Sys.time())), append = TRUE)
             dbBegin(con)
             rs <- dbSendStatement(con, paste("DELETE from awesome WHERE dbname = '' "))
@@ -914,19 +925,19 @@ shinySQLiteUI<-function ()
         return(data)
       })
       output$myavailabledbs <- renderDataTable({
-        awesomedt() %>% datatable(., extensions = "Buttons", 
-                                  options = list(lengthMenu = list(c(5, 15, -1), 
-                                                                   c("5", "15", "All")), pageLength = 10, dom = "Blfrtip", 
-                                                 buttons = list(list(extend = "print", text = "print", 
-                                                                     title = "DISPATCH OF FINAL SIGNED CONTRACTS 2022 FOR HEALTHCARE PROVIDER REGISTRY 12/01/2022"))), 
+        awesomedt() %>% datatable(., extensions = "Buttons",
+                                  options = list(lengthMenu = list(c(5, 15, -1),
+                                                                   c("5", "15", "All")), pageLength = 10, dom = "Blfrtip",
+                                                 buttons = list(list(extend = "print", text = "print",
+                                                                     title = "DISPATCH OF FINAL SIGNED CONTRACTS 2022 FOR HEALTHCARE PROVIDER REGISTRY 12/01/2022"))),
                                   class = "strips")
       })
       output$downlodui <- renderUI({
         con <- dbConnect(SQLite(), dbname)
         read <- awesomedt()
         choices <- read$dbname
-        fluidPage(selectInput("savethisdb", "Choose a dataset to download:", 
-                              choices = choices), downloadButton("downloaddb", 
+        fluidPage(selectInput("savethisdb", "Choose a data frame to download:",
+                              choices = choices), downloadButton("downloaddb",
                                                                  "Download data frame"))
       })
       mydbtosave <- reactive({
@@ -938,7 +949,7 @@ shinySQLiteUI<-function ()
         mydbtosave()
       })
       output$downloaddb <- downloadHandler(filename = function() {
-        paste(paste0(input$savethisdb, ".csv"), ".csv", 
+        paste(paste0(input$savethisdb, ".csv"), ".csv",
               sep = "")
       }, content = function(file) {
         write.csv(mydbtosave(), file, row.names = FALSE)
@@ -951,7 +962,7 @@ shinySQLiteUI<-function ()
         else {
           req(input$opened %in% awesomedt()[, 1] == T)
           myda <- dbReadTable(con, input$opened)
-          selectInput("column", label = "filter column", 
+          selectInput("column", label = "filter column",
                       choices = names(myda))
         }
       })
@@ -959,8 +970,8 @@ shinySQLiteUI<-function ()
         if (input$opened == "") {
         }
         else {
-          fluidPage(textInput("value", "Type the entry you want to append"), 
-                    checkboxInput("commit", label = "commit changes", 
+          fluidPage(textInput("value", "Type the entry you want to append"),
+                    checkboxInput("commit", label = "commit changes",
                                   value = F))
         }
       })
@@ -987,7 +998,7 @@ shinySQLiteUI<-function ()
         con <- dbConnect(SQLite(), dbname)
         if (input$opened != "") {
           if (input$commit == T) {
-            dbWriteTable(con, input$opened, mydatareactive(), 
+            dbWriteTable(con, input$opened, mydatareactive(),
                          append = TRUE)
           }
         }
@@ -1006,9 +1017,9 @@ shinySQLiteUI<-function ()
         }
         else {
           myda <- dbReadTable(con, input$opened)
-          fluidPage(selectInput("col", label = "edit cell in this column", 
-                                choices = names(myda)), textInput("changes", 
-                                                                  "", placeholder = paste("my edit", "|", "Just type anything to add")), 
+          fluidPage(selectInput("col", label = "edit cell in this column",
+                                choices = names(myda)), textInput("changes",
+                                                                  "", placeholder = paste("my edit", "|", "Just type anything to add")),
                     hr())
         }
       })
@@ -1018,7 +1029,7 @@ shinySQLiteUI<-function ()
         }
         else {
           myda <- dbReadTable(con, input$opened)
-          selectInput("myfilter", label = "filter column to condition", 
+          selectInput("myfilter", label = "filter column to condition",
                       choices = names(myda))
         }
       })
@@ -1038,10 +1049,10 @@ shinySQLiteUI<-function ()
         else {
           myda <- mynewdb()
           x <- myda %>% select(!!sym(input$myfilter))
-          fluidPage(selectInput("mycond", HTML(paste("Select column codition where", 
-                                                     span(input$myfilter, style = "color:red"), 
-                                                     "=", uiOutput("kll"))), choices = c("choose condition here", 
-                                                                                         x), selected = ""), checkboxInput("commitchanges", 
+          fluidPage(selectInput("mycond", HTML(paste("Select column codition where",
+                                                     span(input$myfilter, style = "color:red"),
+                                                     "=", uiOutput("kll"))), choices = c("choose condition here",
+                                                                                         x), selected = ""), checkboxInput("commitchanges",
                                                                                                                            label = "commit changes", value = F))
         }
       })
@@ -1052,8 +1063,8 @@ shinySQLiteUI<-function ()
         con <- dbConnect(SQLite(), dbname)
         if (input$commitchanges == T) {
           dbBegin(con)
-          dbSendStatement(con, paste("UPDATE", input$opened, 
-                                     "SET", input$col, "=", quotedchanges(), "WHERE", 
+          dbSendStatement(con, paste("UPDATE", input$opened,
+                                     "SET", input$col, "=", quotedchanges(), "WHERE",
                                      input$myfilter, " =", quotedcond()))
           dbCommit(con)
         }
@@ -1072,8 +1083,8 @@ shinySQLiteUI<-function ()
           "You have not opened any database. First open any of your dbs or create one if you don't have. Click on Open or Create New db to perform the action."
         }
         else {
-          fluidPage(textInput("addcol", placeholder = "type the column name you would like to add", 
-                              label = ""), checkboxInput("confirm", value = F, 
+          fluidPage(textInput("addcol", placeholder = "type the column name you would like to add",
+                              label = ""), checkboxInput("confirm", value = F,
                                                          "commit changes"))
         }
       })
@@ -1081,8 +1092,8 @@ shinySQLiteUI<-function ()
         con <- dbConnect(SQLite(), dbname)
         if (input$confirm == T) {
           dbBegin(con)
-          dbSendStatement(con, paste("\n                           ALTER TABLE", 
-                                     input$opened, "ADD COLUMN", input$addcol, 
+          dbSendStatement(con, paste("\n                           ALTER TABLE",
+                                     input$opened, "ADD COLUMN", input$addcol,
                                      "text;empty"))
           dbCommit(con)
         }
@@ -1098,17 +1109,17 @@ shinySQLiteUI<-function ()
         con <- dbConnect(SQLite(), dbname)
         cols <- dbReadTable(con, input$opened)
         choics <- names(cols)
-        fluidPage(selectInput("selectedcol", "select the column you want to change it's name", 
-                              choices = choics), textInput("newname", placeholder = "type the new name here", 
-                                                           ""), checkboxInput("makechanges", "commit changes", 
+        fluidPage(selectInput("selectedcol", "select the column you want to change it's name",
+                              choices = choics), textInput("newname", placeholder = "type the new name here",
+                                                           ""), checkboxInput("makechanges", "commit changes",
                                                                               value = F))
       })
       changecolname <- reactive({
         con <- dbConnect(SQLite(), dbname)
         if (input$makechanges == T) {
           dbBegin(con)
-          dbSendStatement(con, paste("\n                           ALTER TABLE", 
-                                     input$opened, "RENAME COLUMN", input$selectedcol, 
+          dbSendStatement(con, paste("\n                           ALTER TABLE",
+                                     input$opened, "RENAME COLUMN", input$selectedcol,
                                      "TO", paste0(input$newname, ";")))
           dbCommit(con)
         }
@@ -1120,23 +1131,125 @@ shinySQLiteUI<-function ()
           changecolname()
         }
       })
+
+
+
+      to_scalar <-function(x){
+        if(length(x)>1){
+        xs=paste0(data.frame(x))
+
+        scalarOutput <- substr(xs,3,nchar(xs)-1)
+
+        return(scalarOutput)}else
+        {return(x)}
+      }
+
+
+
+
+      output$columremoveui<-renderUI({
+        con <- dbConnect(SQLite(), dbname)
+        dbcol<-dbReadTable(con,input$opened)
+        chois<-names(dbcol)
+        fluidPage(
+          pickerInput('clchosen',choices = chois,multiple = T,label =uiOutput('colunchsn') ),
+          checkboxInput('removclm','check to confirm the column to remove',value = F),
+          uiOutput('scv')
+        )
+
+
+      })
+
+      output$colunchsn<-renderUI({HTML(paste('choose the columns to to remain in the data frame',
+        span(style='color:red','columns not chosen will be deleted')))
+      })
+
+      output$scv<-renderUI({
+      to_scalar(x=input$clchosen)})
+
+
+      outv<-reactive({
+        whic<-dbReadTable(con,input$opened)
+        nms<-names(whic)
+        postnl<-which(nms==input$clchosen)
+        return(postnl)
+      })
+
+      removcol <- reactive({
+        con <- dbConnect(SQLite(), dbname)
+        if(input$removclm == T){
+          whic<-dbReadTable(con,input$opened)
+          nms<-names(whic)
+          postnl<-which(nms==input$clchosen)
+
+          dbBegin(con)
+
+          dbSendStatement(con,
+
+                          paste("CREATE TEMPORARY TABLE", paste0("my_backupdb(",to_scalar(x=input$clchosen),')')))
+          dbCommit(con)
+          dbBegin(con)
+          dbSendStatement(con, paste('INSERT INTO my_backupdb SELECT', to_scalar(x=input$clchosen), 'FROM', input$opened))
+
+
+          dbCommit(con)
+          dbBegin(con)
+
+
+          dbSendStatement(con,
+
+                          paste('DROP TABLE', input$opened))
+
+          dbSendStatement(con,
+
+                          paste("CREATE TABLE", paste0(input$opened,"(",to_scalar(x=input$clchosen),')')))
+          dbCommit(con)
+          dbBegin(con)
+          dbSendStatement(con,
+                          paste('INSERT INTO', input$opened, 'SELECT', to_scalar(x=input$clchosen), 'FROM', 'my_backupdb'))
+          dbCommit(con)
+          dbBegin(con)
+          dbSendStatement(con,
+                          'DROP TABLE my_backupdb')
+
+             dbCommit(con)   }
+
+
+        data <- dbReadTable(con, input$opened)
+        return(data)
+      })
+
+
+
+      output$rcoltbl<-renderTable({
+        con <- dbConnect(SQLite(), dbname)
+        removcol()
+
+      })
+
+
+
+
+
+
+
       output$checktodel <- renderUI({
-        fluidPage(actionBttn("dlt", "DELETE ROW", style = "fil", 
+        fluidPage(actionBttn("dlt", "DELETE ROW", style = "fil",
                              size = "sm", color = "da"))
       })
       output$COLcondui <- renderUI({
         con <- dbConnect(SQLite(), dbname = dbname)
         dl <- dbReadTable(con, input$opened)
         x <- dl %>% select(!!sym(input$del))
-        selectInput("condt", "enter the column codition to delete row(s)", 
+        selectInput("condt", "enter the column codition to delete row(s)",
                     choices = c("''", x), selected = x[1])
       })
       rowremove <- reactive({
         con <- dbConnect(SQLite(), dbname = dbname)
         if (input$myconfirmation1 == T) {
           dbBegin(con)
-          rs <- dbSendStatement(con, paste("DELETE from", 
-                                           input$opened, "WHERE", input$del, input$bool, 
+          rs <- dbSendStatement(con, paste("DELETE from",
+                                           input$opened, "WHERE", input$del, input$bool,
                                            paste0("'", input$condt, "'")))
           dbGetRowsAffected(rs)
           dbClearResult(rs)
@@ -1148,11 +1261,11 @@ shinySQLiteUI<-function ()
       observeEvent(input$dlt, {
         con <- dbConnect(SQLite(), dbname = dbname)
         dr <- dbReadTable(con, input$opened)
-        ask_confirmation(inputId = "myconfirmation1", 
-                         type = "danger", text = fluidPage(selectInput("del", 
-                                                                       "", "filter column ", choices = names(dr)), 
-                                                           selectInput("bool", "Boolean operator", choices = c("=", 
-                                                                                                               ">", "<")), uiOutput("COLcondui"), paste("Do you really want to delete", 
+        ask_confirmation(inputId = "myconfirmation1",
+                         type = "danger", text = fluidPage(selectInput("del",
+                                                                       "", "filter column ", choices = names(dr)),
+                                                           selectInput("bool", "Boolean operator", choices = c("=",
+                                                                                                               ">", "<")), uiOutput("COLcondui"), paste("Do you really want to delete",
                                                                                                                                                         input$del, "from the db?")))
       })
       observeEvent(input$myconfirmation1, {
@@ -1162,7 +1275,4 @@ shinySQLiteUI<-function ()
           rowremove()
         })
       })
-    }                                                                                                                    
-
-
-
+    }
