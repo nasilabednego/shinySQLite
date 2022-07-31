@@ -2,7 +2,6 @@
 title: "shinySQLite"
 author: "ABEDNEGO NASILA"
 date: '2022-07-29'
-output: html_document
 ---
 
 # shinySQLite
@@ -26,9 +25,10 @@ server <- function(input, output, session){
 }
 shinyApp(ui = ui, server = server)
 ```
-You can use the demo app to build and manage your custom databases. Run
-the following code in R to get started.
-```shinySQLite::runshinySQLite(dbname = '')```
-Enter any name as your dbname. Any time you call the dbname you once
+You can also use the demo app to build and manage your custom databases by running;
+```
+shinySQLite::runshinySQLite(dbname = '')
+```
+The dbname takes any name you provide hence the name provided become the database. Any time you call the dbname you once
 created, you will find your activities stored in the same db. With
 shinySQLite, you can build new databases, manipulate and save your data frames in them at any time.
